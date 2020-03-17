@@ -89,7 +89,7 @@
 
 // This is called from needsResponseHandling delegate to get Uploader specific response handling.
 - (id)uploadResponseAsync:(SFAHttpRequestResponseDataContainer *)dataContainer {
-    if ([dataContainer.response isSuccessCode]) {
+	if ([dataContainer.response isSuccessCode] && dataContainer.data.length != 0) {
         NSError *jsonError;
         NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:dataContainer.data options:kNilOptions error:&jsonError];
         if (!jsonError) {

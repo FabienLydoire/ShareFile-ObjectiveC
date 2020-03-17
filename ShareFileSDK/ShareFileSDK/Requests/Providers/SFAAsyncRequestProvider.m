@@ -175,7 +175,7 @@
 
 - (id)handleSuccessResponseForQuery:(id <SFAQuery> )query apiRequest:(SFAApiRequest *)apiRequest httpRequestResponseDataContainer:(SFAHttpRequestResponseDataContainer *)container error:(SFAError **)error {
     [self logResponseWithHttpRequestResponseContainer:container responseObj:[[NSString alloc] initWithData:container.data encoding:NSUTF8StringEncoding]];
-    if (container.data.length <= 0) { // we have nothing to return.
+    if (container.data.length == 0) { // we have nothing to return.
         return nil;
     }
     
@@ -283,15 +283,19 @@
         }
         
         SFAError *errorToReturn = nil;
-        NSError *jsonError;
-        NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:container.data options:kNilOptions error:&jsonError];
-        //
         NSString *rawString = [[NSString alloc] initWithData:container.data encoding:NSUTF8StringEncoding];
-        if (!jsonError && (query.responseClass == nil || [query.responseClass isSubclassOfClass:[SFIODataObject class]])) {
+        //
+        NSError *jsonError;
+		NSDictionary *jsonDictionary = nil;
+		if (container.data.length != 0) {
+			jsonDictionary = [NSJSONSerialization JSONObjectWithData:container.data options:kNilOptions error:&jsonError];
+		}
+
+		if (!jsonError && jsonDictionary && (query.responseClass == nil || [query.responseClass isSubclassOfClass:[SFIODataObject class]])) {
             errorToReturn = [SFAODataRequestError errorWithDictionary:jsonDictionary response:container.response];
         }
         //
-        else if (!jsonError && query.responseClass == [SFAOAuthToken class]) {
+        else if (!jsonError && jsonDictionary && query.responseClass == [SFAOAuthToken class]) {
             SFAOAuthError *oauthError = [SFAOAuthError errorWithDictionary:jsonDictionary];
             errorToReturn = oauthError;
         }
@@ -311,7 +315,7 @@
 }
 
 - (SFAError *)checkAsyncOperationScheduledWith:(SFAHttpRequestResponseDataContainer *)container {
-    if (container.response.statusCode == 202) {
+	if (container.response.statusCode == 202 && container.data.length != 0) {
         if ([[container.response.allHeaderFields[SFAContentType] lowercaseString] rangeOfString:SFAApplicationJson].location != NSNotFound) {
             NSError *jsonError;
             NSDictionary *jsonDictionary = [NSJSONSerialization JSONObjectWithData:container.data options:kNilOptions error:&jsonError];
