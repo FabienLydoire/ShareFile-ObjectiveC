@@ -1,3 +1,4 @@
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
@@ -74,3 +75,4 @@
 @end
 
 #pragma clang diagnostic pop
+#endif

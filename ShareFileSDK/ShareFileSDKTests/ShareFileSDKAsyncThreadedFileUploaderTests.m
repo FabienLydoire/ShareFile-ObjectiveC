@@ -181,7 +181,7 @@
 }
 
 - (void)testALAssetRequestBuilding {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestFile" ofType:@"txt"];
     NSData *fileData = [NSData dataWithContentsOfFile:path];
     SFAFileInfo *fileInfo = [[SFAFileInfo alloc] initWithFilePath:path];

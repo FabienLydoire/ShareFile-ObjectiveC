@@ -116,7 +116,7 @@
     XCTAssertTrue([request.allHTTPHeaderFields[SFAContentType] rangeOfString:SFAMultiPartFormData].location != NSNotFound, @"Content Type header should be found.");
     XCTAssertTrue([request.allHTTPHeaderFields[SFAContentLength] intValue] == expectedSize, @"Content Length header should be found.");
 //
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     id mockAsset = OCMClassMock([ALAsset class]);
     id mockRep = OCMClassMock([ALAssetRepresentation class]);
     OCMStub([mockAsset defaultRepresentation]).andReturn(mockRep);

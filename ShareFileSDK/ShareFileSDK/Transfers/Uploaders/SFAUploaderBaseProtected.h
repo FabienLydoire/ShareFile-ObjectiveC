@@ -7,7 +7,7 @@
 #import "SFIUploadSpecification.h"
 #import "SFAFileInfo.h"
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #import <AssetsLibrary/AssetsLibrary.h>
 #endif
 
@@ -26,7 +26,7 @@ extern const NSUInteger SFAMaxBufferLength;
 - (SFApiQuery *)uploadSpecificationQuery;
 - (NSURL *)chunkUriForStandardUploads;
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @property (nonatomic, strong, readonly) ALAsset *asset;

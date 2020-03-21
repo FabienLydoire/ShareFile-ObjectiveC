@@ -27,7 +27,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 - (instancetype)initWithSFAClient:(SFAClient *)client uploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest asset:(ALAsset *)asset fileUploaderConfig:(SFAFileUploaderConfig *)fileUpConfig andExpirationDays:(int)expirationDays {
     self = [super initWithSFAClient:client uploadSpecificationRequest:uploadSpecificationRequest asset:asset andExpirationDays:expirationDays];
     if (self) {
@@ -61,12 +61,12 @@
 - (NSString *)calculateHashOfNextNBytes:(NSNumber *)count {
     NSMutableString *hashVal = [NSMutableString new];
     NSInputStream *inputStream = nil;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     if (!self.asset) {
 #endif
     inputStream = [self.fileHandler streamForRead];
     [inputStream open];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 }
 
 long long assetBytesOffset = 0;
@@ -78,8 +78,8 @@ long long assetBytesOffset = 0;
         NSInteger readStatus = 0;
         NSUInteger bytesRead = 0;
         NSError *error = nil;
-#if TARGET_OS_IPHONE
-        ALAssetRepresentation *rep = self.asset.defaultRepresentation;
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
+		ALAssetRepresentation *rep = self.asset.defaultRepresentation;
         if (self.asset) {
             bytesRead = [rep getBytes:buffer fromOffset:assetBytesOffset length:bytesToRead error:&error];
         }
@@ -87,7 +87,7 @@ long long assetBytesOffset = 0;
 #endif
         readStatus = [inputStream read:buffer maxLength:bytesToRead];
         bytesRead = readStatus >= 0 ? (NSUInteger)readStatus : 0;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     }
 #endif
         if (readStatus < 0 || bytesRead <= 0 || error) {
@@ -98,7 +98,7 @@ long long assetBytesOffset = 0;
             NSData *dataToEncode = [NSData dataWithBytes:(const void *)buffer length:bytesRead];
             [hashVal appendString:[SFACryptoUtils md5StringWithData:dataToEncode]];
         }
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
         assetBytesOffset += bytesRead;
 #endif
         countVal -= bytesRead;

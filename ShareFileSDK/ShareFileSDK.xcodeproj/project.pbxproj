@@ -587,6 +587,7 @@
 		3B77781D1A1660290042B7DB /* NSArray+sfapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B77781A1A1660290042B7DB /* NSArray+sfapi.h */; };
 		3B77781E1A1660290042B7DB /* NSArray+sfapi.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B77781B1A1660290042B7DB /* NSArray+sfapi.m */; };
 		3B77781F1A1660290042B7DB /* NSArray+sfapi.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B77781B1A1660290042B7DB /* NSArray+sfapi.m */; };
+		774DAB8A242366840059F608 /* ALAsset+sfapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F5A041B1A42B7D100B257C1 /* ALAsset+sfapi.h */; };
 		777B02CF238C31150071CAB9 /* ShareFileSDK_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 777B02CD238C31150071CAB9 /* ShareFileSDK_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		777B02D2238C31150071CAB9 /* ShareFileSDK_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 777B02CB238C31150071CAB9 /* ShareFileSDK_iOS.framework */; };
 		777B02D3238C31150071CAB9 /* ShareFileSDK_iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 777B02CB238C31150071CAB9 /* ShareFileSDK_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -3830,6 +3831,7 @@
 				9257823C1C51E55400BBCFC9 /* SFIService.h in Headers */,
 				0F1F35B919A611B1005F0709 /* SFAClient.h in Headers */,
 				0FE17ECD19B5CCFF00DC4E78 /* SFALoggingProvider.h in Headers */,
+				774DAB8A242366840059F608 /* ALAsset+sfapi.h in Headers */,
 				F7962D7F19B068460074CF51 /* SFAChangeDomainCallback.h in Headers */,
 				F8E012611BD825C50033EA6A /* SFIShareRequestParams.h in Headers */,
 				F8E012AF1BD825C50033EA6A /* SFIUploadRequestParams.h in Headers */,
@@ -5274,7 +5276,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# define output folder environment variable\nOUTPUT_FOLDER=${BUILD_DIR}/${CONFIGURATION}-iOS-SDK\n\n# Step 1. Build Device and Simulator versions\n#For Device\nxcodebuild BITCODE_GENERATION_MODE=bitcode OTHER_CFLAGS=\"-fembed-bitcode\" -target ShareFileSDK-iOS ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos clean build  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n#For Simulator\nxcodebuild -target ShareFileSDK-iOS -configuration ${CONFIGURATION} -sdk iphonesimulator clean build BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\"\n\n# make sure the output directory exists\nmkdir -p \"${OUTPUT_FOLDER}/device\"\nmkdir -p \"${OUTPUT_FOLDER}/sim\"\n\n# Step 2. Copy Frameworks\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}_iOS.framework\" \"${OUTPUT_FOLDER}/device\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}_iOS.framework\" \"${OUTPUT_FOLDER}/sim\"\n\n# Step 3. Open destination foldr\nopen \"${OUTPUT_FOLDER}\"\n";
+			shellScript = "# define output folder environment variable\nOUTPUT_FOLDER=${BUILD_DIR}/${CONFIGURATION}-iOS-SDK\n\n# make sure the output directory exists\nmkdir -p \"${OUTPUT_FOLDER}/iphoneos\"\nmkdir -p \"${OUTPUT_FOLDER}/iphonesimulator\"\nmkdir -p \"${OUTPUT_FOLDER}/maccatalyst\"\n\n# Step 1. Build Device and Simulator versions\n# Step 2. Copy Frameworks\n#For Device\nxcodebuild BITCODE_GENERATION_MODE=bitcode OTHER_CFLAGS=\"-fembed-bitcode\" -configuration ${CONFIGURATION} -scheme ShareFileSDK-iOS ONLY_ACTIVE_ARCH=NO -sdk iphoneos clean build BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" -derivedDataPath \"${PROJECT_DIR}/DerivedData/iphoneos\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}_iOS.framework\" \"${OUTPUT_FOLDER}/iphoneos\"\n\n#For Simulator\nxcodebuild -configuration ${CONFIGURATION} -scheme ShareFileSDK-iOS -sdk iphonesimulator clean build BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" -derivedDataPath \"${PROJECT_DIR}/DerivedData/iphonesimulator\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}_iOS.framework\" \"${OUTPUT_FOLDER}/iphonesimulator\"\n\n#For MacCatalyst\nxcodebuild -configuration ${CONFIGURATION} -scheme ShareFileSDK-iOS -destination 'platform=macOS,variant=Mac Catalyst' clean build BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" -derivedDataPath \"${PROJECT_DIR}/DerivedData/maccatalyst\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-maccatalyst/${PROJECT_NAME}_iOS.framework\" \"${OUTPUT_FOLDER}/maccatalyst\"\n\n# Step 3. Open destination foldr\nopen \"${OUTPUT_FOLDER}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -7216,6 +7218,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metronomhealth.ShareFileSDK-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s x86_64";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -7252,6 +7255,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metronomhealth.ShareFileSDK-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s x86_64";
@@ -7289,6 +7293,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.metronomhealth.ShareFileSDK-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "arm64 arm64e armv7 armv7s x86_64";

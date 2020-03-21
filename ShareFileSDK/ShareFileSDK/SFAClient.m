@@ -264,7 +264,7 @@
     return [self recreateURLSessionTaskHttpDelegateWithUploadSpecificationRequest:uploadSpecificationRequest filePath:filePath fileUploaderConfig:config expirationDays:-1 uploadSpecification:uploadSpecification];
 }
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (SFAAsyncUploaderBase *)asyncFileUploaderWithUploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest asset:(ALAsset *)asset fileUploaderConfig:(SFAFileUploaderConfig *)config expirationDays:(int)expirationDays {

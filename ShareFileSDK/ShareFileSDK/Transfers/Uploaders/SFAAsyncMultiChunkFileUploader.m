@@ -36,7 +36,7 @@
     return [self initWithSFAClient:client uploadSpecificationRequest:uploadSpecificationRequest filePath:filePath fileUploaderConfig:nil andExpirationDays:-1];
 }
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 - (instancetype)initWithSFAClient:(SFAClient *)client uploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest asset:(ALAsset *)asset fileUploaderConfig:(SFAFileUploaderConfig *)config andExpirationDays:(int)expirationDays {
     self = [super initWithSFAClient:client uploadSpecificationRequest:uploadSpecificationRequest asset:asset fileUploaderConfig:config andExpirationDays:expirationDays];
     if (self) {
@@ -64,7 +64,7 @@
             uploadMethod = SFAUploadMethodThreaded;
         }
         SFACompositeUploaderTask *task = [[SFACompositeUploaderTask alloc] initWithUploadSpecificationTask:(SFAHttpTask *)uploadSpecTask concurrentExecution:self.config.numberOfThreads uploaderTasks:nil finishTask:finishUploadTask delegate:self transferMetadata:transferMetadata callbackQueue:callbackQueue client:self.client uploadMethod:uploadMethod];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
         ALAssetRepresentation *rep = self.asset.defaultRepresentation;
         if (self.asset) {
             [task initializeProgressWithTotalBytes:rep.size];
@@ -72,7 +72,7 @@
         else {
 #endif
         [task initializeProgressWithTotalBytes:[self.fileHandler fileSize].longLongValue];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     }
 #endif
         task.completionCallback = completionCallback;
@@ -151,7 +151,7 @@
 
 - (NSArray *)buildFilePartsForTask:(SFACompositeUploaderTask *)task {
     unsigned long long fileLength;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     ALAssetRepresentation *rep = self.asset.defaultRepresentation;
     if (self.asset) {
         fileLength = (unsigned long long)rep.size;
@@ -159,7 +159,7 @@
     else {
 #endif
     fileLength = [self.fileHandler fileSize].unsignedLongLongValue;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 }
 
 #endif
@@ -199,7 +199,7 @@
     uint8_t *buffer = malloc(filePart.length);
     NSUInteger bytesRead = 0;
     NSInteger readStatus = 0;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     ALAssetRepresentation *rep = self.asset.defaultRepresentation;
     if (self.asset) {
         bytesRead = [rep getBytes:buffer fromOffset:(long long)filePart.offset length:filePart.length error:NULL];
@@ -213,7 +213,7 @@
     bytesRead = readStatus >= 0 ? (NSUInteger)readStatus : 0;
     [inputStream close];
     inputStream = nil;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 }
 
 #endif
@@ -234,7 +234,7 @@
 - (NSURL *)appendFinalParamsToUrlString:(NSMutableString *)finishUrlStr isFinished:(BOOL)finished isStreamed:(BOOL)streamed {
     if (finished) {
         unsigned long long size = 0;
-    #if TARGET_OS_IPHONE
+	#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
         ALAssetRepresentation *rep = self.asset.defaultRepresentation;
         if (self.asset) {
             size = (unsigned long long)rep.size;
@@ -243,7 +243,7 @@
         else {
     #endif
         size = [self.fileHandler fileSize].unsignedLongLongValue;
-    #if TARGET_OS_IPHONE
+    #if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     }
     #endif
         [finishUrlStr appendString:@"&respformat=json"];

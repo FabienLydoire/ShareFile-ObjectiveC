@@ -1,3 +1,4 @@
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @interface ALAsset (sfapi)
@@ -21,3 +22,4 @@
 - (NSString *)fileExtension;
 
 @end
+#endif

@@ -24,7 +24,7 @@ const NSUInteger SFAMaxBufferLength = 65536; // Should be <= NSIntegerMax
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 - (instancetype)initWithSFAClient:(SFAClient *)client uploadSpecificationRequest:(SFAUploadSpecificationRequest *)upSpecReq asset:(ALAsset *)asset andExpirationDays:(int)expirationDays {
     self = [super init];
     if (self) {
@@ -37,14 +37,14 @@ const NSUInteger SFAMaxBufferLength = 65536; // Should be <= NSIntegerMax
 }
 #endif
 
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) || TARGET_OS_MACCATALYST
 @class ALAsset;
 #endif
 - (void)setupWithClient:(SFAClient *)client uploadSpecificationRequest:(SFAUploadSpecificationRequest *)upSpecReq filePath:(NSString *)filePath asset:(ALAsset *)asset andExpirationDays:(int)expirationDays {
     self.client = client;
     self.uploadSpecificationRequest = upSpecReq;
     
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     if (filePath) {
         _fileHandler = [[SFAFileInfo alloc] initWithFilePath:filePath];
     }

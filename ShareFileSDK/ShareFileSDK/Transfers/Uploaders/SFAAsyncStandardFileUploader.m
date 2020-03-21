@@ -42,7 +42,7 @@
     return [self initWithSFAClient:client uploadSpecificationRequest:uploadSpecificationRequest filePath:filePath fileUploaderConfig:nil andExpirationDays:-1];
 }
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 - (instancetype)initWithSFAClient:(SFAClient *)client uploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest asset:(ALAsset *)asset fileUploaderConfig:(SFAFileUploaderConfig *)config andExpirationDays:(int)expirationDays {
     self = [super initWithSFAClient:client uploadSpecificationRequest:uploadSpecificationRequest asset:asset fileUploaderConfig:config andExpirationDays:expirationDays];
     if (self) {
@@ -233,7 +233,7 @@
     NSMutableDictionary *dict = (*contextObject) ? :[NSMutableDictionary dictionary];
     SFAuthenticationContext *authContext = [SFAUtils nilForNSNull:dict[SFAAuthContextKey]];
     
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     if (!self.asset) {
 #endif
     // Open a stream for the file we're going to send.  We open this stream
@@ -241,7 +241,7 @@
     self.fileStream = [self.fileHandler streamForRead];
     assert(self.fileStream != nil);
     [self.fileStream open];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 }
 
 #endif
@@ -324,14 +324,14 @@
                 
                 // If we still have file data to send, read the next chunk.
                 BOOL condition = self.fileStream != nil;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
                 condition = condition || (self.asset && !self.assetDataRead);
 #endif
                 if (condition) {
                     NSError *err = nil;
                     NSUInteger bytesReadFromAsset = 0;
                     NSInteger bytesRead = 0;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
                     ALAssetRepresentation *rep = self.asset.defaultRepresentation;
                     if (self.asset) {
                         bytesReadFromAsset = [rep getBytes:self.bufferOnHeap fromOffset:(long long)self.assetByteOffset length:SFAMaxBufferLength error:&err];
@@ -339,7 +339,7 @@
                     else {
 #endif
                     bytesRead = [self.fileStream read:self.bufferOnHeap maxLength:SFAMaxBufferLength];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
                 }
 #endif
 
@@ -433,11 +433,11 @@
 
 - (void)initializeBodyLength {
     NSString *fileName = self.uploadSpecificationRequest.fileName;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     ALAssetRepresentation *rep = self.asset.defaultRepresentation;
 #endif
     if (fileName.length == 0) {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
         ALAssetRepresentation *rep = self.asset.defaultRepresentation;
         if (self.asset) {
             fileName = rep.filename;
@@ -445,7 +445,7 @@
         else {
 #endif
         fileName = [self.fileHandler filePath].lastPathComponent;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     }
 #endif
     }
@@ -463,14 +463,14 @@
     self.bodySuffixData = [bodySuffixStr dataUsingEncoding:NSUTF8StringEncoding];
     
     NSNumber *fileLengthNum;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     if (self.asset) {
         fileLengthNum = [NSNumber numberWithLongLong:rep.size];
     }
     else {
 #endif
     fileLengthNum = [self.fileHandler fileSize];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 }
 
 #endif

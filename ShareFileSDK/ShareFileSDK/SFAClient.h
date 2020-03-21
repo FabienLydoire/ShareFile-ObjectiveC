@@ -15,7 +15,7 @@
 #import "SFAAuthHandling.h"
 #import "SFACredentialStatusTracking.h"
 #import "SFABackgroundSessionManager.h"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #import <AssetsLibrary/AssetsLibrary.h>
 #endif
 
@@ -287,7 +287,7 @@
  *  @warning This method is only available if #define ShareFile is set to 1 in 'SFAConfig.h'. See recreateURLSessionTaskHttpDelegateWithUploadSpecificationRequest:filePath:fileUploaderConfig:uploadSpecification: if #define ShareFile is set to 0. Simply changing #define ShareFile will cause run-time exception if the code is not recompiled. You should only do this if you have access to the code.
  */
 - (id <SFAURLSessionTaskHttpDelegate> )recreateURLSessionTaskHttpDelegateWithUploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest filePath:(NSString *)filePath fileUploaderConfig:(SFAFileUploaderConfig *)config expirationDays:(int)expirationDays uploadSpecification:(SFIUploadSpecification *)uploadSpecification;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 /**
  *  Creates uploader with provided parameters.
  *
@@ -305,7 +305,7 @@
 #else
 - (SFAAsyncUploaderBase *)asyncFileUploaderWithUploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest filePath:(NSString *)filePath fileUploaderConfig:(SFAFileUploaderConfig *)config;
 - (id <SFAURLSessionTaskHttpDelegate> )recreateURLSessionTaskHttpDelegateWithUploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest filePath:(NSString *)filePath fileUploaderConfig:(SFAFileUploaderConfig *)config uploadSpecification:(SFIUploadSpecification *)uploadSpecification;
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (SFAAsyncUploaderBase *)asyncFileUploaderWithUploadSpecificationRequest:(SFAUploadSpecificationRequest *)uploadSpecificationRequest asset:(ALAsset *)asset fileUploaderConfig:(SFAFileUploaderConfig *)config;

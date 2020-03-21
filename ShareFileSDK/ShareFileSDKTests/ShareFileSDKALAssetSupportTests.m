@@ -1,7 +1,7 @@
 #import "ShareFileSDKTests.h"
 #import "ShareFileSDKTestsProtected.h"
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 
 #import <OCMock/OCMock.h>
 
@@ -100,7 +100,7 @@
 }
 
 - (void)testUploader {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     // Standard
     SFAUploadSpecificationRequest *specReq = [[SFAUploadSpecificationRequest alloc] init];
     specReq.method = SFAUploadMethodStandard;

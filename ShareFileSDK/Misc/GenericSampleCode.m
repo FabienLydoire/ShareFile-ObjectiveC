@@ -16,7 +16,7 @@
 @property (strong, nonatomic) SFIItem *backgroundDownloadItem;
 @property (strong, atomic) NSString *backgroundDownloadFilePath;
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 @property (strong, nonatomic) ALAssetsLibrary *lib;
 @property (strong, nonatomic) ALAsset *asset;
 #endif
@@ -207,7 +207,7 @@ static BOOL useBackgroundUploadDownload = NO;
 }
 
 - (void)uploadToFolder:(SFIFolder *)destinationFolder useAsset:(BOOL)useAsset {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
     if (useAsset) {
         self.lib = [[ALAssetsLibrary alloc] init];
         [self.lib enumerateGroupsWithTypes:ALAssetsGroupAll
@@ -232,7 +232,7 @@ static BOOL useBackgroundUploadDownload = NO;
     else {
 #endif
     [self uploadToFolder:destinationFolder];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
 }
 
 #endif
@@ -243,8 +243,8 @@ static BOOL useBackgroundUploadDownload = NO;
     NSString *path = @"";
     SFAUploadMethod method = SFAUploadMethodStandard;
     BOOL canUseBackgroundUpload = NO;
-#if TARGET_OS_IPHONE
-    if (self.asset) {
+#if TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST
+	if (self.asset) {
         if (useBackgroundUploadDownload) {
             NSLog(@"ALAsset backgroud upload is not supported.");
         }
